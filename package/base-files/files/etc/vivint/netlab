@@ -1,0 +1,132 @@
+#!/bin/sh -x
+
+mac=$(ifconfig eth0 | grep HWaddr | tail -c 20 | tr A-Z a-z)
+mac_last_4=$(echo $mac | tail -c 7 | sed 's/:// g')
+ssid=$(grep $mac /etc/vivint/tplink_mac_ip | cut -d: -f1 | tr a-z A-Z)
+#curr_ssid=$(uci get wireless.default_radio1.ssid | cut -d'-' -f1,2)
+curr_ssid=$(uci get wireless.default_radio1.ssid)
+mode=$(uci get vivint.lab.mode)
+
+# dev_model=$(grep id /etc/board.json | cut -d'"' -f4 | sed 's:,:-:g')
+dev_model=$(grep id /etc/board.json | cut -d'"' -f4 | sed 's:-:'':g' | sed 's:,:-:g')
+curr_hostname=$(uci get system.@system[0].hostname)
+hostname=$dev_model$'-'$mac_last_4
+
+
+set_forwards () {	
+	airtower_ip=$(cat /tmp/dhcp.leases | grep AirTower | cut -d' ' -f3)
+	magellan_ip=$(cat /tmp/dhcp.leases | grep Vivint-imx8mm-magellan | cut -d' ' -f3)
+	wallsly_ip=$(cat /tmp/dhcp.leases | grep -i mesh | head -1 | cut -d' ' -f3)
+	if [ -n "$airtower_ip" ]; then
+#		uci set dhcp.airtower.name="$airtower_name"
+#                uci commit dhcp
+#		/etc/init.d/dnsmasq restart
+		# Firewall: redirect to AirTower IP
+		rediret_rules=$(uci show firewall | grep redirect | grep dest_ip | cut -d'=' -f1)		
+		for i in $rediret_rules; do uci set $i="$airtower_ip" ; done 
+		uci commit firewall
+		/etc/init.d/firewall restart
+		echo 1 > /tmp/forwards_set
+	elif [ -n "$magellan_ip" ]; then  
+#               uci set dhcp.airtower.name="$airtower_name"
+#                uci commit dhcp
+#               /etc/init.d/dnsmasq restart
+                # Firewall: redirect to magellan IP
+                rediret_rules=$(uci show firewall | grep redirect | grep dest_ip | cut -d'=' -f1)
+                for i in $rediret_rules; do uci set $i="$magellan_ip" ; done
+                uci commit firewall
+		/etc/init.d/firewall restart
+		echo 1 > /tmp/forwards_set
+        elif [ -n "$wallsly_ip" ]; then   
+#               uci set dhcp.airtower.name="$airtower_name"
+#                uci commit dhcp                           
+#               /etc/init.d/dnsmasq restart
+                # Firewall: redirect to wallsly IP
+                rediret_rules=$(uci show firewall | grep redirect | grep dest_ip | cut -d'=' -f1)
+                for i in $rediret_rules; do uci set $i="$wallsly_ip" ; done                     
+                uci commit firewall                                         
+                /etc/init.d/firewall restart
+		echo 1 > /tmp/forwards_set
+	fi
+}
+
+
+
+# set_redirect_ip
+if [  -z $1  ]; then
+        echo "not setting"
+else
+        echo "setting"
+        echo $1
+	# Firewall: redirect to IP manually                                              
+         rediret_rules=$(uci show firewall | grep redirect | grep dest_ip | cut -d'=' -f1)
+         for i in $rediret_rules; do uci set $i="$1" ; done
+         uci commit firewall                        
+         /etc/init.d/firewall restart   
+	 exit 0
+fi 
+
+# Set host name based on device model                                           
+if [ $curr_hostname != $hostname ]; then                                            
+        uci set system.@system[0].hostname=$hostname                            
+        uci commit system                                                       
+        /etc/init.d/system restart                                              
+fi  
+
+# Check wifi ssid and exit if in AP mode(default mode, dumb relay)
+if [ -z $ssid ] && [ $curr_ssid != $hostname'-5GHZ' ]; then
+	uci set wireless.default_radio0.ssid=$hostname'-2.4GHZ'
+	uci set wireless.default_radio1.ssid=$hostname'-5GHZ'
+	uci set wireless.bak.ssid=$hostname'-BAK'
+	uci commit wireless
+	wifi > /dev/null
+elif [ $curr_ssid != $ssid ]; then
+	uci set wireless.default_radio0.ssid=$ssid'-2.4GHZ' 
+	uci set wireless.default_radio1.ssid=$ssid'-5GHZ'
+	uci set wireless.bak.ssid=$ssid'-BAK-'$mac_last_4 
+	uci commit wireless
+	wifi > /dev/null
+fi
+
+prev_mode=$(uci get vivint.lab.prev_mode)
+
+
+if [ $mode = 'router' -a $prev_mode = 'AP' ]; then 
+	uci del network.lan.ifname
+	uci set network.lan.proto='static'
+	uci set network.wan.ifname='eth0'
+	uci commit network
+	uci set dhcp.lan.ignore='0'
+	uci commit dhcp
+	/etc/init.d/network restart	
+	/etc/init.d/dnsmasq restart
+	set_forwards
+elif [ $mode = 'AP' -a $prev_mode = 'router' ]; then
+	uci del network.wan.ifname                                        
+        uci set network.lan.proto='dhcp'                                     
+        uci set network.lan.ifname='eth0'                                      
+        uci commit network                                                     
+        uci set dhcp.lan.ignore='1'                                            
+        uci commit dhcp                                                     
+        /etc/init.d/network restart                                         
+        /etc/init.d/dnsmasq restart 
+elif [ $mode = 'router' ] && [ ! -f /tmp/forwards_set ]; then 
+	set_forwards
+		
+fi	 
+
+uci set vivint.lab.prev_mode=$mode
+uci commit vivint
+
+#while true; do
+#	uptick=$(cat /proc/uptime| cut -d'.' -f1)
+#	if [ $uptick -gt 500 ]; then
+#		exit 0
+#	fi 	
+#	sleep 5;
+
+#done
+	
+# uci set dhcp.airtower.name="$airtower_name"
+# uci commit dhcp
+

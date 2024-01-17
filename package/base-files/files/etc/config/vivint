@@ -1,0 +1,5 @@
+
+config globals 'lab'
+	option mode 'router'
+	option prev_mode 'AP'
+
