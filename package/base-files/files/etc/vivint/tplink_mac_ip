@@ -1,5 +1,5 @@
 
-RACK_6		MAC		IP		HW
+RACK_6		MAC		DHCP IP		HW
 Chamber-20: 3c:84:6a:78:98:43 10.1.70.248       V3
 Chamber-21: 40:3f:8c:e6:8a:20 10.1.45.155	V3
 Chamber-22: a4:2b:b0:2a:f4:ce 10.1.70.167	V3
@@ -8,14 +8,14 @@ Chamber-24: 28:ee:52:35:3d:29 10.1.70.60	V3
 Chamber-25: 60:32:b1:fc:2d:bc 10.1.70.174	V3
 Chamber-26: 28:ee:52:35:3d:b0 10.1.70.227  	V3
 Chamber-27: c0:c9:e3:da:a0:28 10.1.70.245	V3
-Chamber-28: 3c:84:6a:78:a7:97 10.1.71.251	V3
+Chamber-28: 98:da:c4:7c:9b:c1 10.1.68.50	V1
 Chamber-29: 68:ff:7b:fd:e6:4d 10.1.70.203	V1
 Chamber-30: 68:ff:7b:3b:8a:d2 10.1.70.83	V1
 Chamber-31: 98:da:c4:e6:e1:54 10.1.71.64	V1 
  
 
 
-RACK_7
+RACK_7		MAC	       Static IP
 Chamber-32: 98:da:c4:7c:94:98 10.1.44.229 	V1
 Chamber-33: 98:da:c4:7c:50:70 10.1.44.189 	V1
 Chamber-34: 68:ff:7b:5d:52:7a 10.1.44.213	V1
