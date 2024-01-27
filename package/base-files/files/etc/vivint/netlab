@@ -80,7 +80,7 @@ if [ -z $ssid ] && [ $curr_ssid != $hostname'-5GHZ' ]; then
 	uci set wireless.bak.ssid=$hostname'-BAK'
 	uci commit wireless
 	wifi > /dev/null
-elif [ $curr_ssid != $ssid ]; then
+elif [ ! -z $ssid ] && [ $curr_ssid != $ssid'-5GHZ' ]; then
 	uci set wireless.default_radio0.ssid=$ssid'-2.4GHZ' 
 	uci set wireless.default_radio1.ssid=$ssid'-5GHZ'
 	uci set wireless.bak.ssid=$ssid'-BAK-'$mac_last_4 
