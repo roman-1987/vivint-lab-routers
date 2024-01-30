@@ -29,3 +29,35 @@ Chamber-41: 98:da:c4:7c:99:21 10.1.44.192 	V1
 Chamber-42: 98:da:c4:e6:f3:8a 10.1.44.216	V1
 Chamber-43: 68:ff:7b:3b:8a:72 10.1.44.193	V1
 
+RACK_8		MAC		Static IP
+Chamber-44: 68:ff:7b:71:a4:be 10.1.44.186	V1
+Chamber-45: 68:ff:7b:d9:bf:86 10.1.44.187	V1
+Chamber-46: 68:ff:7b:5c:b1:94 10.1.44.232	V1
+Chamber-47: 98:da:c4:e7:2a:4d 10.1.68.12	V1
+Chamber-48: 68:ff:7b:d9:aa:83 10.1.44.217	V1
+Chamber-49: 98:da:c4:7c:4a:49 10.1.44.220	V1
+Chamber-50: 98:da:c4:e6:d2:42 10.1.44.228	V1
+Chamber-51: 68:ff:7b:d9:af:96 10.1.44.188	V1
+Chamber-52: 98:da:c4:7c:bb:02 10.1.44.191	V1
+Chamber-53: 	V1
+Chamber-54: 	V1
+Chamber-55: 	V1
+
+RACK_X		MAC		Static IP	HW
+chamber-01: 94:83:c4:1e:a9:02 10.1.69.168	GLAR
+chamber-04: 94:83:c4:1e:a3:da 10.1.69.169	GLAR	
+chamber-05: 94:83:c4:17:bc:57 10.1.69.170	GLAR
+chamber-06: 94:83:c4:1e:a5:4e 10.1.69.171	GLAR
+chamber-07: 94:83:c4:1e:a9:42 10.1.69.172	GLAR
+chamber-08: 94:83:c4:03:05:de 10.1.69.213	GLAR
+chamber-09: 94:83:c4:03:05:76 10.1.69.214	GLAR
+chamber-10: 94:83:c4:03:04:96 10.1.69.215	GLAR
+chamber-11: 94:83:c4:03:03:c2 10.1.69.216	GLAR
+chamber-12: 94:83:c4:03:03:80 10.1.69.217	GLAR
+chamber-13: 94:83:c4:03:04:ac 10.1.69.218	GLAR
+chamber-14: 94:83:c4:03:03:a4 10.1.69.219	GLAR
+chamber-15: 94:83:c4:1e:9b:ee 10.1.69.175	GLAR
+chamber-16: 94:83:c4:1e:9d:2e 10.1.69.176	GLAR
+chamber-17: 94:83:c4:1e:a6:06 10.1.69.177	GLAR
+chamber-18: 94:83:c4:1e:9d:3c 10.1.69.178	GLAR
+chamber-19: 94:83:c4:1e:a2:6c 10.1.69.179	GLAR
