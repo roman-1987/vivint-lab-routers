@@ -39,9 +39,9 @@ Chamber-49: 98:da:c4:7c:4a:49 10.1.44.220	V1
 Chamber-50: 98:da:c4:e6:d2:42 10.1.44.228	V1
 Chamber-51: 68:ff:7b:d9:af:96 10.1.44.188	V1
 Chamber-52: 98:da:c4:7c:bb:02 10.1.44.191	V1
-Chamber-53: 	V1
-Chamber-54: 	V1
-Chamber-55: 	V1
+Chamber-53: 94:83:c4:43:21:f5 10.1.68.13	GLMT
+Chamber-54: 94:83:c4:43:22:01 10.1.44.190	GLMT
+Chamber-55: 94:83:c4:43:19:95 10.1.44.195	GLMT
 
 RACK_X		MAC		Static IP	HW
 chamber-01: 94:83:c4:1e:a9:02 10.1.69.168	GLAR
