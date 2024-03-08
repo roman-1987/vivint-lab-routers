@@ -1,6 +1,14 @@
 #!/bin/sh -x
 
-mac=$(ifconfig eth0 | grep HWaddr | tail -c 20 | tr A-Z a-z)
+
+dev_model=$(grep id /etc/board.json | cut -d'"' -f4 | sed 's:-:'':g' | sed 's:,:-:g')
+# only gl-ar750 out of lab routers has eth1 as wan interface, others - eth0 
+wan_iface=eth0
+is_glar750=$(echo $dev_model | grep -i glar750)
+if [ $is_glar750 ]; then 
+	wan_iface=eth1
+fi	
+mac=$(ifconfig $wan_iface | grep HWaddr | tail -c 20 | tr A-Z a-z)
 mac_last_4=$(echo $mac | tail -c 7 | sed 's/:// g')
 ssid=$(grep $mac /etc/vivint/tplink_mac_ip | cut -d: -f1 | tr a-z A-Z)
 #curr_ssid=$(uci get wireless.default_radio1.ssid | cut -d'-' -f1,2)
@@ -94,7 +102,7 @@ prev_mode=$(uci get vivint.lab.prev_mode)
 if [ $mode = 'router' -a $prev_mode = 'AP' ]; then 
 	uci del network.lan.ifname
 	uci set network.lan.proto='static'
-	uci set network.wan.ifname='eth0'
+	uci set network.wan.ifname=$wan_iface
 	uci commit network
 	uci set dhcp.lan.ignore='0'
 	uci commit dhcp
@@ -104,7 +112,7 @@ if [ $mode = 'router' -a $prev_mode = 'AP' ]; then
 elif [ $mode = 'AP' -a $prev_mode = 'router' ]; then
 	uci del network.wan.ifname                                        
         uci set network.lan.proto='dhcp'                                     
-        uci set network.lan.ifname='eth0'                                      
+        uci set network.lan.ifname=$wan_iface                                      
         uci commit network                                                     
         uci set dhcp.lan.ignore='1'                                            
         uci commit dhcp                                                     
